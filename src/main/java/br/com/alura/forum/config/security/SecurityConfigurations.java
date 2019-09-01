@@ -55,10 +55,11 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 		.and().addFilterBefore(new AutenticacaoViaTokenFilter(tokenService, usuarioRepository), UsernamePasswordAuthenticationFilter.class);
 	}
 	
-	//COnfigurações de Recursos Estáticos(js,css,imagens, etc.)
+	//Configurações de Recursos Estáticos(js,css,imagens, etc.)
+	//Configuração do Swagger
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		
+		web.ignoring().antMatchers("/**.html", "/v2/api-docs","/webjars/**","/configuration/**", "swagger-resources/**");
 	}	
 	
 }
