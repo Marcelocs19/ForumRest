@@ -7,28 +7,43 @@ import static org.junit.Assert.assertNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import br.com.alura.forum.modelo.Curso;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-class CursoRepositoryTest {
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) // faz com que use o seu banco mysql, postgre ou outro em vez do h2
+@ActiveProfiles("test")
+public class CursoRepositoryTest {
 	
 	@Autowired
 	private CursoRepository repository;
+	
+	@Autowired
+	private TestEntityManager em;
 
 	@Test
-	void deveriaCarregarUmCursoAoBuscarPeloSeuNome() {
+	public void deveriaCarregarUmCursoAoBuscarPeloSeuNome() {
 		String nomeCurso = "HTML 5";
+		
+		Curso html5 = new Curso();
+		html5.setNome(nomeCurso);
+		html5.setCategoria("Programação");
+		
+		em.persist(html5);
+		
 		Curso curso = repository.findByNome(nomeCurso);
 		assertNotNull(curso);
 		assertEquals(nomeCurso, curso.getNome());
 	}
 	
 	@Test
-	void naoDeveriaCarregarUmCursoCujoNomeNaoEstejaCadastrado() {
+	public void naoDeveriaCarregarUmCursoCujoNomeNaoEstejaCadastrado() {
 		String nomeCurso = "JPA";
 		Curso curso = repository.findByNome(nomeCurso);
 		assertNull(curso);
