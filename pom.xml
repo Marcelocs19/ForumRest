@@ -92,6 +92,8 @@
 
 
 	<build>
+		<!-- Mudar o nome do jar -->
+		<finalName>Forum</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
